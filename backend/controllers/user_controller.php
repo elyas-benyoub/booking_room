@@ -25,13 +25,14 @@ class UserController
         error_log("[USER_REGISTER] Données JSON reçues: " . print_r($data, true));
 
         // 4. Valider les données
-        if (empty($data['email']) || empty($data['password']) || empty($data['username'])) {
+        if (empty($data['email']) || empty($data['password']) || empty($data['username']) || empty($data['firstname']) || empty($data['lastname'])) {
             http_response_code(400); // Bad Request
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Données manquantes.',
                 'data' => $data
             ]);
+
             return;
         }
 

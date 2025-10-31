@@ -10,7 +10,7 @@ const Home = () => {
         const username = formData.get('username');
         const email = formData.get('email');
         const password = formData.get('password');
-        const firstname = formData.get('firtname');
+        const firstname = formData.get('firstname');
         const lastname = formData.get('lastname');
 
         const userData = {
