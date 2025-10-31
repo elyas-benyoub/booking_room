@@ -29,7 +29,8 @@ class UserController
             http_response_code(400); // Bad Request
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Données manquantes. "email", "password" et "username" sont requis.'
+                'message' => 'Données manquantes.',
+                'data' => $data
             ]);
             return;
         }
