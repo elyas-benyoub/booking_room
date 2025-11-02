@@ -1,12 +1,10 @@
-const Footer = () => {
-    const nameStyle = "font-bold text-red-400";
-    const footerStyle = 'flex w-full h-14 justify-between items-center px-8 bg-gray-600';
-
-    return (
-        <footer className={footerStyle}>
-            <p>Projet par <span className={nameStyle}>Elyas</span> et <span className={nameStyle}>Ressane</span></p>
-        </footer >
-    );
-};
+function Footer() {
+  const title = "Five Legend ©";
+  return (
+    <div className="inset-x-0 z-3 bottom-0 h-20 bg-emerald-600 text-white flex justify-center font-bold p-4">
+      <h1>{title} </h1>
+    </div>
+  );
+}
 
 export default Footer;

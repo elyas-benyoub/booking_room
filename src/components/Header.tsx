@@ -1,34 +1,47 @@
-import { NavLink } from 'react-router';
+import { NavLink } from "react-router-dom";
 
-const Header = () => {
-    const baseNavLinkClasses = "h-full flex items-center px-4 text-white transition duration-300";
-    const hoverClasses = "hover:bg-gray-400";
-    const activeClasses = "bg-gray-700 font-bold";
+function Header() {
+  const title = "Five Legend";
+  return (
+    <div className="flex justify-between items-center bg-emerald-600 text-white">
+      <div>
+        <h1 className="ml-8 bg-emerald-600  text-6xl font-extrabold pb-4">
+          {title}
+        </h1>
+      </div>
 
-    const getNavLinkStyle = ({ isActive }: { isActive: boolean }): string => {
-        let style = `${baseNavLinkClasses} ${hoverClasses}`;
+      <form action="">
+        <div className="flex row items-center gap-5">
+          <input
+            type="text"
+            className="rounded-lg placeholder-black bg-white text-black border-3 border-white p-2"
+            placeholder="Identifiant"
+          />
+          <input
+            type="text"
+            className="rounded-lg placeholder-black bg-white text-black border-3 border-white p-2"
+            placeholder="Password"
+          />
+        </div>
+        <div></div>
+      </form>
 
-        if (isActive) {
-            style += ` ${activeClasses}`;
-        }
+      <nav>
+        <ul className="text-2xl font-extrabold bg-emerald-600 flex justify-center gap-4">
+          <li className="rounded-2xl p-3.5 hover:bg-emerald-100 hover:text-blackcursor-pointer">
+            <NavLink to="/">HOME</NavLink>
+          </li>
+          <li className="rounded-2xl p-3.5 hover:bg-emerald-100 hover:text-black cursor-pointer">
+            <NavLink to="/register">REGISTER</NavLink>
+          </li>
 
-        return style;
-    };
-
-    return (
-        <nav className='flex w-full h-14 justify-between items-center px-8 bg-gray-600'>
-            <img
-                src="/france_lyon_64x64.png"
-                alt="Logo OL"
-                className='h-8 w-8'
-            />
-            <ul className='flex h-full items-center'>
-                <li className="h-full"><NavLink className={getNavLinkStyle} to='/'>Home</NavLink></li>
-                <li className="h-full"><NavLink className={getNavLinkStyle} to='/about'>About</NavLink></li>
-                <li className="h-full"><NavLink className={getNavLinkStyle} to='/contact'>Contact</NavLink></li>
-            </ul>
-        </nav>
-    );
-};
+          <li className="rounded-2xl p-3.5 hover:bg-emerald-100 hover:text-black cursor-pointer">
+            <NavLink to="/profile">PROFILE</NavLink>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+}
 
 export default Header;
