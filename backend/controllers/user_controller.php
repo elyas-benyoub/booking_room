@@ -7,6 +7,33 @@ if (!defined('ROOT_PATH')) {
 
 class UserController
 {
+    /**
+     * Gère la requête GET /user
+     *
+     * @param string $method La méthode HTTP (ex: 'GET')
+     * @param array|null $param Le paramètre d'URL (ex: un ID)
+     */
+    public function index($method, $param) // <-- LA CORRECTION
+    {
+        // Optionnel : Vous pouvez vérifier que c'est bien un GET
+        if ($method !== 'GET') {
+            http_response_code(405);
+            Logger::log('WARN', "[405] Tentative de $method sur /user (GET attendu)");
+            echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
+            return;
+        }
+
+        $userModel = new UserModel();
+        $users = $userModel->get_users();
+
+        http_response_code(200);
+        // On formate la réponse ici, dans le contrôleur
+        echo json_encode([
+            "status" => "success",
+            "data" => $users
+        ]);
+    }
+
     public function register($method, $param)
     {
 
@@ -25,12 +52,18 @@ class UserController
         error_log("[USER_REGISTER] Données JSON reçues: " . print_r($data, true));
 
         // 4. Valider les données
-        if (empty($data['email']) || empty($data['password']) || empty($data['username']) || empty($data['firstname']) || empty($data['lastname'])) {
-            http_response_code(400); // Bad Request
+        $errors = isEmptyFields($data);
+
+        if (count($errors) > 0) {
+            http_response_code(400); // 400 Bad Request
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Données manquantes.',
-                'data' => $data
+                'message' => 'Données manquantes : ' . join(', ', $errors),
+                'data' => $data,
+                'errors' => [
+                    'fields' => $errors,
+                    'message' => "Ce champ doit être rempli."
+                ]
             ]);
 
             return;
@@ -42,10 +75,6 @@ class UserController
 
         // 6. Renvoyer une réponse de succès
         http_response_code(201); // 201 Created
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Utilisateur enregistré avec succès.',
-            'data' => $data // Renvoyer les données pour confirmer
-        ]);
+        echo json_encode([...$result, "data" => $data]);
     }
 }

@@ -13,3 +13,11 @@ export type SigninData = {
 }
 
 export type TypeRules = [string, string, () => boolean];
+
+export interface Errors {
+    status: "string";
+    errors: {
+        message: string;
+        fields: string[];
+    }
+}

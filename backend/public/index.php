@@ -4,7 +4,7 @@
 
 // A. Définir les Headers CORS (TRÈS IMPORTANT pour React)
 // Cela autorise le frontend React à communiquer avec le backend API.
-header("Access-Control-Allow-Origin: http://localhost:5173"); 
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -35,17 +35,26 @@ define('PUBLIC_PATH', ROOT_PATH . '/public');
 // --- 4. Chargement des fichiers ---
 
 try {
-    require_once CONFIG_PATH . '/database.php';
-    require_once CONFIG_PATH . '/logs.php';
+    // outils
+    require_once SERVICE_PATH . '/Logger.php';
     require_once SERVICE_PATH . '/helpers.php';
+    require_once CONFIG_PATH . '/logs.php';
+
+    // config et connexion BDD
+    require_once CONFIG_PATH . '/database.php';
+    require_once MODEL_PATH . "/database_model.php";
+    
+    // model parent
+    require_once MODEL_PATH . "/base_model.php";
+
+    // models enfants
     require_once MODEL_PATH . '/user_model.php';
     require_once MODEL_PATH . '/booking_model.php';
     require_once MODEL_PATH . '/room_model.php';
-    require_once MODEL_PATH . '/room_model.php';
 
 } catch (Throwable $e) {
-    $errorMessage = 'Erreur fatale du serveur (require failed): ' . $e->getMessage();
-    error_log("[FATAL] " . $errorMessage . " dans " . $e->getFile() . " à la ligne " . $e->getLine());
+    $errorMessage = 'Erreur fatale (require failed): ' . $e->getMessage() . " dans " . $e->getFile() . " à la ligne " . $e->getLine();
+    Logger::log('ERROR', $errorMessage);
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
@@ -57,11 +66,17 @@ try {
 // --- 5. LANCEMENT DU ROUTEUR ---
 
 try {
-    require_once  CORE_PATH . '/router.php';
+    require_once CORE_PATH . '/router.php';
 
 } catch (Throwable $e) {
     http_response_code(500);
-    error_log("[FATAL] Erreur irrécupérable dans le routeur/contrôleur: " . $e->getMessage());
+    $errorMessage = sprintf(
+        "Erreur irrécupérable (routeur/contrôleur): %s dans %s à la ligne %d",
+        $e->getMessage(),
+        $e->getFile(),
+        $e->getLine()
+    );
+    Logger::log('ERROR', $errorMessage);
     echo json_encode(['status' => 'error', 'message' => 'Erreur interne majeure du serveur.']);
     exit();
 }

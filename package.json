@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "api": "php -S localhost:8000 -t backend/public backend/public/index.php",
-    "all": "concurrently \"npm run dev\" \"npm run api\"",
+   "all": "concurrently --names \"VITE,API\" \"npm run dev\" \"npm run api\"",
+    "log": "tail -f backend/logs/app.log",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -30,7 +30,7 @@ $param = $segments[2] ?? null;              // ID optionnel, ex: /room/view/123
 // On récupère aussi la méthode HTTP (GET, POST, ...)
 $method = $_SERVER['REQUEST_METHOD'];
 
-error_log("[ROUTING] Contrôleur: $controllerSlug, Méthode: $methodName, Param: $param, HTTP: $method");
+Logger::log("[ROUTING]", "Contrôleur: $controllerSlug, Méthode: $methodName, Param: $param, HTTP: $method");
 
 // 4. Gérer la route "par défaut" (racine)
 if ($controllerSlug === 'home' && $methodName === 'index') {
@@ -46,7 +46,7 @@ $controllerFile = CONTROLLER_PATH . '/' . $controllerSlug . '_controller.php';
 // 6. Vérifier si le fichier du contrôleur existe
 if (!file_exists($controllerFile)) {
     http_response_code(404);
-    error_log("[404] Fichier contrôleur non trouvé: $controllerFile");
+    Logger::log("WARN", "[404] Fichier contrôleur non trouvé: $controllerFile");
     echo json_encode(['status' => 'error', 'message' => "Route non trouvée (contrôleur '$controllerSlug' inexistant)."]);
     exit();
 }
@@ -66,7 +66,7 @@ $controller = new $controllerClass(); // Ex: new UserController()
 // Vérifier si la méthode (l'action) existe dans le contrôleur
 if (!method_exists($controller, $methodName)) {
     http_response_code(404);
-    error_log("[404] Méthode non trouvée: $controllerClass->$methodName()");
+    Logger::log("WARN","[404] Méthode non trouvée: $controllerClass->$methodName()");
     echo json_encode(['status' => 'error', 'message' => "Action non trouvée ('$methodName')."]);
     exit();
 }

@@ -1,12 +1,8 @@
-<?php 
+<?php
 
-// Reste inchangé, mais doit maintenant pointer vers votre classe DataBase en version PDO
-require_once MODEL_PATH . "/database_model.php"; 
-
-class User
+class UserModel extends BaseModel
 {
     // Le type de $db est maintenant PDO
-    private PDO $db; 
     private $id = null;
     public $username = null;
     public $email = null;
@@ -16,10 +12,7 @@ class User
 
     public function __construct(?array $data = null)
     {
-        $this->db = Database::getConnexion();
-        
-        // mysqli_report() n'est plus nécessaire. 
-        // La classe Database de PDO gère déjà les exceptions.
+        parent::__construct();
 
         if ($data) {
             $this->id = $data['id'] ?? null;
@@ -30,48 +23,127 @@ class User
         }
     }
 
+
     /**
-     * Méthode privée pour exécuter des requêtes PDO.
-     * Le paramètre $types de mysqli n'est plus nécessaire.
+     * Enregistre un nouvel utilisateur en base de données.
+     *
+     * Valide les données, vérifie les doublons (email/username),
+     * hashe le mot de passe et insère l'utilisateur.
+     *
+     * @param array $data Un tableau associatif contenant [username, email, password, firstname, lastname]
+     * @return array Un tableau formaté pour la réponse JSON [status, message, data?]
      */
-    private function run_query(string $sql, array $params = []): PDOStatement
+    public function register(array $data): array
     {
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt;
-    }
+        // 1. Accès sécurisé aux données
+        $username = $data['username'] ?? null;
+        $email = $data['email'] ?? null;
+        $password = $data['password'] ?? null;
+        $firstname = $data['firstname'] ?? null;
+        $lastname = $data['lastname'] ?? null;
 
-    public function isConnected(): bool
-    {
-        if (empty($this->id))
-            return false;
-
-        try {
-            $query = "select id from users where id = ?";
-            // $types ("i") n'est plus requis
-            $stmt = $this->run_query($query, [$this->id]); 
-            
-            // En PDO, on utilise rowCount() au lieu de get_result()->num_rows
-            return $stmt->rowCount() === 1; 
-        } catch (PDOException $e) { // Changé en PDOException
-            return false;
+        // 2. Validation
+        if (empty($username) || empty($password) || empty($email) || empty($firstname) || empty($lastname)) {
+            return [
+                "status" => "error",
+                "message" => "Veuillez remplir tous les champs."
+            ];
         }
 
+        // 3. Vérification de doublon
+        if ($this->findUser($username, $email)) {
+            return [
+                "status" => "error",
+                "message" => "Cet utilisateur (email ou pseudo) existe déjà."
+            ];
+        }
+
+        try {
+            // 4. Hash
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // 5. Insertion SÉCURISÉE
+            $query = "INSERT INTO users (username, password_hash, email, firstname, lastname) VALUES (?, ?, ?, ?, ?)";
+            $params = [$username, $hashedPassword, $email, $firstname, $lastname];
+
+            $newId = $this->insert($query, $params);
+
+            // 6. vérification de succès
+            if ($newId) {
+                // Mettre à jour l'objet actuel
+                $this->id = $newId;
+                $this->username = $username;
+                $this->email = $email;
+                $this->firstname = $firstname;
+                $this->lastname = $lastname;
+
+                return [
+                    "status" => "success",
+                    "message" => "Utilisateur enregistré avec succès.",
+                    "data" => $this->getAllInfos()
+                ];
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "L'insertion a échoué pour une raison inconnue."
+                ];
+            }
+
+        } catch (PDOException $e) {
+            Logger::log('ERROR', "Erreur DB register(): " . $e->getMessage());
+            return [
+                "status" => "error",
+                "message" => "Une erreur interne est survenue lors de l'enregistrement."
+            ];
+        }
     }
 
+    // public function connect(string $username, string $password)
+    // {
+     
+    // }
+
+    // public function disconnect()
+    // {
+
+    // }
+
+    // public function delete()
+    // {
+
+    // }
+
+    // public function update($username, $email, $firstname, $lastname)
+    // {
+ 
+    // }
+
+
+    /**
+     * Vérifie si un utilisateur existe déjà avec un email OU un nom d'utilisateur donné.
+     *
+     * @param string $username Le nom d'utilisateur à rechercher.
+     * @param string|null $email L'email à rechercher (peut être null).
+     * @return bool True si l'utilisateur existe, false sinon (ou en cas d'erreur).
+     */
     public function findUser(string $username, ?string $email)
     {
         try {
             $query = "select username, email from users where email = ? or username = ?";
-            $stmt = $this->run_query($query, [$email, $username]);
-            
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$email, $username]);
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            echo "Erreur DB emailExists(): " . $e->getMessage();
+            Logger::log('ERROR', "Erreur BDD (findUser): " . $e->getMessage());
             return false;
         }
     }
 
+
+    /**
+     * Renvoie un tableau associatif des informations de l'uitilisateur actuel
+     * @return array{email: mixed, firstname: mixed, id: mixed, lastname: mixed, username: mixed}
+     */
     public function getAllInfos()
     {
         return [
@@ -83,181 +155,15 @@ class User
         ];
     }
 
-    public function register($data)
+
+    /**
+     * Récupère tous les utilisateurs de la base de données.
+     *
+     * @return array Un tableau contenant tous les utilisateurs.
+     */
+    public function get_users()
     {
-        extract($data);
-        
-        if (empty($username) || empty($password) || empty($email) || empty($firstname) || empty($lastname)) {
-            return [
-                "status" => "error",
-                "message" => "Veuillez remplir tous les champs."
-            ];
-        }
-
-        if ($this->findUser($username, $email)) {
-            return [
-                "status" => "error",
-                "message" => "Cette utilisateur existe déjà."
-            ];
-        }
-
-        try {
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            
-            // J'ai supposé que votre colonne se nomme 'password_hash'
-            $stmt = $this->run_query(
-                "insert into users (username, password_hash, email, firstname, lastname) values (?, ?, ?, ?, ?)",
-                [$username, $hashedPassword, $email, $firstname, $lastname]
-            );
-
-            if ($stmt) {
-                // En PDO, on utilise lastInsertId()
-                $this->id = $this->db->lastInsertId(); 
-                $this->username = $username;
-                $this->email = $email;
-                $this->firstname = $firstname;
-                $this->lastname = $lastname;
-            }
-
-            return [
-                "status" => "success",
-                "message" => "Inscription réussie.",
-                "data" => $this->getAllInfos()
-            ];
-        } catch (PDOException $e) {
-            return [
-                "status" => "error",
-                "message" => "Erreur DB register(): " . $e->getMessage()
-            ];
-        }
-    }
-
-    public function connect(string $username, string $password)
-    {
-        try {
-            // CORRECTION: La requête "where ? = username" est corrigée en "where username = ?"
-            $stmt = $this->run_query(
-                "select * from users where username = ?",
-                [$username]
-            );
-            
-            // En PDO, on utilise fetch() (fetch_assoc est défini par défaut dans Database)
-            $userData = $stmt->fetch();
-
-            if (!$userData) {
-                return [
-                    "status" => "error",
-                    "message" => "Utilisateur introuvable."
-                ];
-            }
-
-            // CORRECTION: Le champ est 'password_hash' (basé sur register()), pas 'password'
-            if (!password_verify($password, $userData['password_hash'])) {
-                return [
-                    "status" => "error",
-                    "message" => "Mot de passe incorrect."
-                ];
-            }
-
-            $this->id = $userData['id'];
-            $this->username = $userData['username'];
-            $this->email = $userData['email'];
-            $this->firstname = $userData['firstname'];
-            $this->lastname = $userData['lastname'];
-
-            return [
-                "status" => "success",
-                "message" => "Connexion réussie à $this->username.",
-                "data" => $this->getAllInfos()
-            ];
-        } catch (PDOException $e) {
-            return [
-                "status" => "error",
-                "message" => "Erreur DB connect(): " . $e->getMessage()
-            ];
-        }
-    }
-
-    public function disconnect()
-    {
-        $this->id = null;
-        $this->username = null;
-        $this->email = null;
-        $this->firstname = null;
-        $this->lastname = null;
-
-        return [
-            "status" => "success",
-            "message" => "Vous avez été déconnecté"
-        ];
-    }
-
-    public function delete()
-    {
-        try {
-            // Simplifié pour utiliser run_query
-            $stmt = $this->run_query("delete from users where username = ?", [$this->username]);
-
-            if ($stmt->rowCount() > 0) {
-                $this->disconnect();
-                return [
-                    "status" => "success",
-                    "message" => "Le profile à été supprimé."
-                ];
-            } else {
-                return [
-                    "status" => "error",
-                    "message" => "Échec de la suppression (utilisateur non trouvé)."
-                ];
-            }
-        } catch (PDOException $e) {
-            return [
-                "status" => "error",
-                "message" => "Erreur DB delete(): " . $e->getMessage()
-            ];
-        }
-    }
-
-    public function update($username, $email, $firstname, $lastname)
-    {
-        try {
-            // CORRECTION: Votre code d'origine préparait/exécutait la requête plusieurs fois.
-            // Voici la version corrigée qui utilise run_query() une seule fois.
-            $stmt = $this->run_query(
-                "
-                update users
-                set username = ?,
-                    email = ?,
-                    firstname = ?,
-                    lastname = ?
-                where id = ?
-                ",
-                [$username, $email, $firstname, $lastname, $this->id]
-            );
-
-            // On vérifie si une ligne a été affectée
-            if ($stmt->rowCount() > 0) { 
-                $this->username = $username;
-                $this->email = $email;
-                $this->firstname = $firstname;
-                $this->lastname = $lastname;
-
-                return [
-                    "status" => "success",
-                    "message" => "Le profile à été modifié.",
-                    "data" => $this->getAllInfos()
-                ];
-            } else {
-                return [
-                    "status" => "error",
-                    "message" => "Échec de la modification (ou aucune donnée n'a changé)."
-                ];
-            }
-        } catch (PDOException $e) {
-            return [
-                "status" => "error",
-                "message" => "Erreur DB update(): " . $e->getMessage()
-            ];
-        }
+        $query = "select * from users";
+        return $this->fetchAll($query);
     }
 }
