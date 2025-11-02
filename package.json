@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "api": "php -S localhost:8000 -t backend/public backend/public/index.php",
+    "api": "php -S localhost:80 -t backend/public backend/public/index.php",
    "all": "concurrently --names \"VITE,API\" \"npm run dev\" \"npm run api\"",
     "log": "tail -f backend/logs/app.log",
     "build": "tsc -b && vite build",

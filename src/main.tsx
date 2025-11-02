@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register />} /> 
         </Routes>
         <div className="flex absolute z-[1] bottom-0 bg-[url('src/assets/gazon.png')] bg-repeat-x size-64 w-full "></div>
       </main>
