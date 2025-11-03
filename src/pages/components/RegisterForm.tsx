@@ -1,4 +1,5 @@
 const RegisterForm = () => {
+
   const handlesubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const target = event.target as HTMLFormElement;
@@ -9,6 +10,7 @@ const RegisterForm = () => {
     const email = formData.get("email");
     const password = formData.get("password");
     // const confirm-password = formData.get("confirm-password");
+
     try {
       const response = await fetch("http://localhost:8000/user/register", {
         method: "POST",
@@ -21,9 +23,12 @@ const RegisterForm = () => {
           password: password,
         }),
       });
-      const result = await response.json();
-      console.log(result)   
-    } catch (error) {console.error(error)}
+      
+      const result = await response.text();
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <figure className="flex flex-col justify-center m-auto bg-emerald-500 p-3 rounded-xl p-16 gap-10 mt-10">
