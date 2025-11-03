@@ -1,155 +1,133 @@
-const RegisterForm = () => {
+import { useState } from "react";
 
-  const handlesubmit = async (event: React.FormEvent) => {
+const RegisterForm = () => {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const target = event.target as HTMLFormElement;
     const formData = new FormData(target);
-    const username = formData.get("username");
-    const firstname = formData.get("firstname");
-    const lastname = formData.get("lastname");
-    const email = formData.get("email");
-    const password = formData.get("password");
-    // const confirm-password = formData.get("confirm-password");
 
-    try {
-      const response = await fetch("http://localhost:8000/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-          password: password,
-        }),
-      });
+    const username = formData.get("username")?.toString() || "";
+    const firstname = formData.get("firstname")?.toString() || "";
+    const lastname = formData.get("lastname")?.toString() || "";
+    const email = formData.get("email")?.toString() || "";
+    const password = formData.get("password")?.toString() || "";
+    const confirmPassword = formData.get("confirm-password")?.toString() || "";
 
-      const result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-    }
+    const newErrors: { [key: string]: string } = {};
+    if (!username) newErrors.username = "Le pseudo est requis";
+    if (!firstname) newErrors.firstname = "Le prénom est requis";
+    if (!lastname) newErrors.lastname = "Le nom est requis";
+    if (!email) newErrors.email = "L'email est requis";
+    if (!password) newErrors.password = "Le mot de passe est requis";
+    if (password !== confirmPassword) newErrors.confirmPassword = "Les mots de passe ne correspondent pas";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+
+    fetch("http://localhost:8000/user/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, firstname, lastname, email, password })
+    })
+      .then(data => data.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+
   };
+
   return (
-    <form onSubmit={handlesubmit} className="flex flex-row justify-center gap-8">
-      <div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="username" className="text-white font-bold flex justify-center">Pseudo</label>
+    <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row justify-center gap-12 p-6">
+
+      <div className="flex flex-col gap-4 w-full lg:w-1/3">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="username" className="text-white font-bold">Pseudo</label>
           <input
             type="text"
-            className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
             id="username"
             name="username"
             placeholder="John123"
-            autoComplete="given-username"
-            aria-describedby="username-error"
+            className="rounded-lg p-2 border border-white bg-white"
           />
-          <small
-            id="username-error"
-            className="error"
-            aria-live="polite"></small>
+          {errors.username && <small className="text-red-500">{errors.username}</small>}
         </div>
-        <label
-          htmlFor="firstname"
-          className="text-white font-bold flex justify-center">
-          Prenom
-        </label>
-        <input
-          type="text"
-          className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
-          id="firstname"
-          name="firstname"
-          placeholder="John"
-          autoComplete="given-name"
-          aria-describedby="firstname-error"
-        />
-        <small
-          id="firstname-error"
-          className="error"
-          aria-live="polite"></small>
-        <label
-          htmlFor="lastname"
-          className=" text-white font-bold flex justify-center">
-          Nom
-        </label>
-        <input
-          type="text"
-          className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
-          id="lastname"
-          name="lastname"
-          placeholder="Doe"
-          autoComplete="family-name"
-          aria-describedby="lastname-error"
-        />
-        <small
-          id="lastname-error"
-          className="error"
-          aria-live="polite"></small>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="firstname" className="text-white font-bold">Prénom</label>
+          <input
+            type="text"
+            id="firstname"
+            name="firstname"
+            placeholder="John"
+            className="rounded-lg p-2 border border-white bg-white"
+          />
+          {errors.firstname && <small className="text-red-500">{errors.firstname}</small>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="lastname" className="text-white font-bold">Nom</label>
+          <input
+            type="text"
+            id="lastname"
+            name="lastname"
+            placeholder="Doe"
+            className="rounded-lg p-2 border border-white bg-white"
+          />
+          {errors.lastname && <small className="text-red-500">{errors.lastname}</small>}
+        </div>
       </div>
-      <div>
-        <img src="src/assets/ballon.png" className="size-56" alt="" />
+
+      <div className="flex flex-col items-center justify-center gap-6 w-full lg:w-1/3">
+        <img src="src/assets/ballon.png" className="w-56 h-56 object-contain" alt="ballon" />
         <button
-          className="rounded-xl relative p'2 flex justify-center items-center m-auto min-h-[50px] w-fit overflow-hidden border border-emerald-100 bg-white px-3 text-black font-bold cursor-pointer shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-emerald-400 before:transition-all before:duration-500 hover:text-black hover:before:left-0 hover:before:w-full hover:before:bg-emerald-200"
-          type="submit">
+          type="submit"
+          className="relative overflow-hidden px-6 py-3 bg-white text-black font-bold rounded-xl border border-emerald-100 shadow-lg hover:bg-emerald-200 transition-all"
+        >
           S'inscrire
         </button>
       </div>
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="email"
-          className="text-white font-bold flex justify-center">
-          Adresse Email
-        </label>
-        <input
-          type="email"
-          className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
-          id="email"
-          name="email"
-          autoComplete="email"
-          placeholder="ex : exemple@mail.com"
-          aria-describedby="email-error"
-        />
-        <small id="email-error" className="error" aria-live="polite"></small>
-        <label
-          htmlFor="password"
-          className="text-white font-bold flex justify-center">
-          Mot de passe
-        </label>
-        <input
-          type="password"
-          className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
-          id="password"
-          name="password"
-          minLength={8}
-          maxLength={64}
-          autoComplete="new-password"
-          aria-describedby="password-error"
-        />
-        <small
-          id="password-error"
-          className="error"
-          aria-live="polite"></small>
-        <label
-          htmlFor="confirm-password"
-          className="text-white font-bold flex justify-center">
-          Confirmation Mot de passe
-        </label>
-        <input
-          type="password"
-          className="rounded-lg placeholder-black bg-white border-3 border-white p-2"
-          id="confirm-password"
-          name="confirm-password"
-          minLength={8}
-          maxLength={64}
-          autoComplete="new-password"
-          aria-describedby="password-error"
-        />
-        <small
-          id="password-error"
-          className="error"
-          aria-live="polite"></small>
-      </div>
 
+      <div className="flex flex-col gap-4 w-full lg:w-1/3">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="email" className="text-white font-bold">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="ex : exemple@mail.com"
+            className="rounded-lg p-2 border border-white bg-white"
+          />
+          {errors.email && <small className="text-red-500">{errors.email}</small>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="password" className="text-white font-bold">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            minLength={8}
+            maxLength={64}
+            className="rounded-lg p-2 border border-white bg-white"
+          />
+          {errors.password && <small className="text-red-500">{errors.password}</small>}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="confirm-password" className="text-white font-bold">Confirmation Mot de passe</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            minLength={8}
+            maxLength={64}
+            className="rounded-lg p-2 border border-white bg-white"
+          />
+          {errors.confirmPassword && <small className="text-red-500">{errors.confirmPassword}</small>}
+        </div>
+      </div>
     </form>
   );
 };
