@@ -45,7 +45,7 @@ class UserModel extends BaseModel
         // 2. Validation
         if (empty($username) || empty($password) || empty($email) || empty($firstname) || empty($lastname)) {
             return [
-                "status" => "error",
+                "success" => false,
                 "message" => "Veuillez remplir tous les champs."
             ];
         }
@@ -53,7 +53,7 @@ class UserModel extends BaseModel
         // 3. Vérification de doublon
         if ($this->findUser($username, $email)) {
             return [
-                "status" => "error",
+                "success" => false,
                 "message" => "Cet utilisateur (email ou pseudo) existe déjà."
             ];
         }
@@ -78,13 +78,13 @@ class UserModel extends BaseModel
                 $this->lastname = $lastname;
 
                 return [
-                    "status" => "success",
+                    "success" => true,
                     "message" => "Utilisateur enregistré avec succès.",
                     "data" => $this->getAllInfos()
                 ];
             } else {
                 return [
-                    "status" => "error",
+                    "success" => false,
                     "message" => "L'insertion a échoué pour une raison inconnue."
                 ];
             }
@@ -92,7 +92,7 @@ class UserModel extends BaseModel
         } catch (PDOException $e) {
             Logger::log('ERROR', "Erreur DB register(): " . $e->getMessage());
             return [
-                "status" => "error",
+                "success" => false,
                 "message" => "Une erreur interne est survenue lors de l'enregistrement."
             ];
         }
@@ -100,7 +100,7 @@ class UserModel extends BaseModel
 
     // public function connect(string $username, string $password)
     // {
-     
+
     // }
 
     // public function disconnect()
@@ -115,7 +115,7 @@ class UserModel extends BaseModel
 
     // public function update($username, $email, $firstname, $lastname)
     // {
- 
+
     // }
 
 

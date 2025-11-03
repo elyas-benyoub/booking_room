@@ -1,34 +1,32 @@
-// import { useState } from "react";
-// import type { Errors } from "../utils/types";
 
-
-const Home = () => {
-    // const [errors, setErrors] = useState<Errors | []>([])
-
-    async function handleRegister(event: React.FormEvent) {
+const Register = () => {
+     async function handleRegister(event: React.FormEvent) {
         event.preventDefault();
 
-        // const target = event.target as HTMLFormElement;
+        const target = event.target as HTMLFormElement;
 
-        // const formData = new FormData(target);
+        const formData = new FormData(target);
 
-        // const username = formData.get('username');
-        // const email = formData.get('email');
-        // const password = formData.get('password');
-        // const firstname = formData.get('firstname');
-        // const lastname = formData.get('lastname');
+        const username = formData.get('username');
+        const email = formData.get('email');
+        const password = formData.get('password');
+        const firstname = formData.get('firstname');
+        const lastname = formData.get('lastname');
 
-        // const userData = {
-        //     username: username,
-        //     email: email,
-        //     password: password,
-        //     firstname: firstname,
-        //     lastname: lastname
-        // };
-
+        const userData = {
+            username: username,
+            email: email,
+            password: password,
+            firstname: firstname,
+            lastname: lastname
+        };
 
         try {
-            const response = await fetch("http://localhost:8000/user");
+            const response = await fetch("http://localhost:8000/user/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData)
+            });
 
             const result = await response.json();
             console.log(result);
@@ -80,6 +78,6 @@ const Home = () => {
             <button type="submit">S'enregistrer</button>
         </form>
     )
-}
+};
 
-export default Home;
+export default Register;

@@ -34,7 +34,7 @@ Logger::log("[ROUTING]", "Contrôleur: $controllerSlug, Méthode: $methodName, P
 
 // 4. Gérer la route "par défaut" (racine)
 if ($controllerSlug === 'home' && $methodName === 'index') {
-    echo json_encode(['status' => 'success', 'message' => 'Bienvenue sur l\'API Booking Room']);
+    echo json_encode(["success" => true, 'message' => 'Bienvenue sur l\'API Booking Room']);
     exit(); // On s'arrête ici
 }
 
@@ -47,7 +47,7 @@ $controllerFile = CONTROLLER_PATH . '/' . $controllerSlug . '_controller.php';
 if (!file_exists($controllerFile)) {
     http_response_code(404);
     Logger::log("WARN", "[404] Fichier contrôleur non trouvé: $controllerFile");
-    echo json_encode(['status' => 'error', 'message' => "Route non trouvée (contrôleur '$controllerSlug' inexistant)."]);
+    echo json_encode(["success" => false, 'message' => "Route non trouvée (contrôleur '$controllerSlug' inexistant)."]);
     exit();
 }
 
@@ -66,8 +66,8 @@ $controller = new $controllerClass(); // Ex: new UserController()
 // Vérifier si la méthode (l'action) existe dans le contrôleur
 if (!method_exists($controller, $methodName)) {
     http_response_code(404);
-    Logger::log("WARN","[404] Méthode non trouvée: $controllerClass->$methodName()");
-    echo json_encode(['status' => 'error', 'message' => "Action non trouvée ('$methodName')."]);
+    Logger::log("WARN", "[404] Méthode non trouvée: $controllerClass->$methodName()");
+    echo json_encode(["success" => false, 'message' => "Action non trouvée ('$methodName')."]);
     exit();
 }
 

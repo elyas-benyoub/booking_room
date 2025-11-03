@@ -6,7 +6,7 @@ import Header from './components/Header.tsx'
 import About from './components/About.tsx'
 import Contact from './components/Contact.tsx'
 import Footer from './components/Footer.tsx'
-import Home from './pages/Home.tsx'
+import Home from './pages/home/Home.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

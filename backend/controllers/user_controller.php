@@ -19,7 +19,7 @@ class UserController
         if ($method !== 'GET') {
             http_response_code(405);
             Logger::log('WARN', "[405] Tentative de $method sur /user (GET attendu)");
-            echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
+            echo json_encode(["success" => false, 'message' => 'Méthode non autorisée.']);
             return;
         }
 
@@ -29,19 +29,18 @@ class UserController
         http_response_code(200);
         // On formate la réponse ici, dans le contrôleur
         echo json_encode([
-            "status" => "success",
+            "success" => true,
             "data" => $users
         ]);
     }
 
     public function register($method, $param)
     {
-
         // 1. Vérifier la méthode HTTP
         if ($method !== 'POST') {
             http_response_code(405); // Method Not Allowed
             error_log("[405] Tentative de $method sur /user/register");
-            echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée. Utilisez POST.']);
+            echo json_encode(["success" => false, 'message' => 'Méthode non autorisée. Utilisez POST.']);
             return;
         }
 
@@ -57,21 +56,17 @@ class UserController
         if (count($errors) > 0) {
             http_response_code(400); // 400 Bad Request
             echo json_encode([
-                'status' => 'error',
+                "success" => false,
                 'message' => 'Données manquantes : ' . join(', ', $errors),
-                'data' => $data,
-                'errors' => [
-                    'fields' => $errors,
-                    'message' => "Ce champ doit être rempli."
-                ]
+                'data' => $data
             ]);
 
             return;
         }
 
         // 5. Appeler le modèle pour créer l'utilisateur
-        $userModel = new User();
-        $result = $userModel->register($data);
+        $user_model = new UserModel();
+        $result = $user_model->register($data);
 
         // 6. Renvoyer une réponse de succès
         http_response_code(201); // 201 Created
