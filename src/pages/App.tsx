@@ -13,7 +13,6 @@ export default function App() {
         <Card text ={textLeft}imgUrl={"src/assets/create.png"} btn={"Créer une session"} />
         <Card text={textRight}imgUrl={"src/assets/join.png"} btn={"Rejoindre une session"} />
       </div>
-       <Warn/>
     </div>
   );
 }

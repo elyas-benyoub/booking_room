@@ -1,4 +1,4 @@
-import bgCard from "/src/assets/terrain.jpg";
+  import bgCard from "/src/assets/terrain.jpg";
 
 interface Props {
   imgUrl: string;

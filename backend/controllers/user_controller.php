@@ -70,7 +70,7 @@ class UserController
         }
 
         // 5. Appeler le modèle pour créer l'utilisateur
-        $userModel = new User();
+        $userModel = new UserModel();
         $result = $userModel->register($data);
 
         // 6. Renvoyer une réponse de succès
