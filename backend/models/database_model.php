@@ -34,7 +34,11 @@ class DataBase {
 
             } catch (PDOException $e) { // 6. L'exception devient PDOException
                 // 7. Gérer l'échec de la connexion
-                die("Erreur de connexion à la base de données (PDO) : " . $e->getMessage());
+                http_response_code(500); // server
+                echo json_encode([
+                    "success" => false,
+                    'message' => "Erreur de connexion à la base de données (PDO) : " . $e->getMessage(),
+                ]);
             }
         }
 
