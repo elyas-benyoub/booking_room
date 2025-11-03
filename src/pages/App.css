@@ -19,9 +19,13 @@ body {
 #root {
   display: flex;
   flex-direction: column;
-  min-height: 150vh;
+  min-height: 100vh;
 }
 
 main {
   position: relative;
+}
+
+.shadow-nav {
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 }

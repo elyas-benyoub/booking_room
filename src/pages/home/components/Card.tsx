@@ -1,4 +1,4 @@
-  import bgCard from "/src/assets/terrain.jpg";
+import bgCard from "/src/assets/terrain.jpg";
 
 interface Props {
   imgUrl: string;
@@ -6,7 +6,7 @@ interface Props {
   text: string;
 }
 
-const Card = ({ imgUrl, btn, text}: Props) => {
+const Card = ({ imgUrl, btn, text }: Props) => {
   console.log(bgCard);
 
   return (
@@ -22,10 +22,10 @@ const Card = ({ imgUrl, btn, text}: Props) => {
       </h1>
       <figcaption className="flex flex-col flex-1 justify-between items-center gap-3 py-5">
         <p className="text-center text-white w-60 b-3 ">
-         {text}
+          {text}
         </p>
 
-        <button className="rounded-xl relative p'2 flex justify-center items-center m-auto min-h-[50px] w-fit overflow-hidden border border-emerald-100 bg-white px-3 text-black font-bold cursor-pointer shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-emerald-400 before:transition-all before:duration-500 hover:text-black hover:before:left-0 hover:before:w-full hover:before:bg-emerald-200">
+        <button className="rounded-xl relative p-2 flex justify-center items-center m-auto min-h-[50px] w-fit overflow-hidden border border-emerald-100 bg-white px-3 text-black font-bold cursor-pointer shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-emerald-400 before:transition-all before:duration-500 hover:text-black hover:before:left-0 hover:before:w-full hover:before:bg-emerald-200">
           <span className="relative z-10">{btn}</span>
         </button>
       </figcaption>

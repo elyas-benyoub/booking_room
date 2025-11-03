@@ -5,9 +5,9 @@ const ProfileFront = () => {
         <figcaption className="flex flex-col size-56 rounded-4xl">
           <img src={PicProfile} className="rounded-4xl" alt="" />
           
-        </figcaption>
+        {/* </figcaption> */}
         {/* ____________________________________________ */}
-        <figcaption className="size-116 rounded-4xl bg-emerald-100">
+        {/* <figcaption className="size-116 rounded-4xl bg-emerald-100"> */}
         
         <ul className="flex flex-col justify-center">
           <li>Pseudo :</li>
@@ -16,9 +16,9 @@ const ProfileFront = () => {
           <li>Email :</li>
         </ul>
 
-        </figcaption>
+        {/* </figcaption> */}
         {/* ____________________________________________ */}
-        <figcaption className="flex flex-col size-56 bg-white h-116 rounded-4xl">
+        {/* <figcaption className="flex flex-col size-56 bg-white h-116 rounded-4xl"> */}
 
         </figcaption>
     </figure>

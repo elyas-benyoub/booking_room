@@ -2,8 +2,8 @@ import ProfileFront from "./components/ProfileFront"
 
 const Profile = () => {
   return (
-  
-   <ProfileFront />
+
+    <ProfileFront />
 
   )
 }
