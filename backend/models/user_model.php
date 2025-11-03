@@ -78,7 +78,7 @@ class UserModel extends BaseModel
                 $this->lastname = $lastname;
 
                 return [
-                    "status" => "success",
+                    "success" => true,
                     "message" => "Utilisateur enregistré avec succès.",
                     "data" => $this->getAllInfos()
                 ];
@@ -100,7 +100,7 @@ class UserModel extends BaseModel
 
     // public function connect(string $username, string $password)
     // {
-     
+
     // }
 
     // public function disconnect()
@@ -115,7 +115,7 @@ class UserModel extends BaseModel
 
     // public function update($username, $email, $firstname, $lastname)
     // {
- 
+
     // }
 
 

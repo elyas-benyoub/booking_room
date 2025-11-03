@@ -43,7 +43,7 @@ try {
     // config et connexion BDD
     require_once CONFIG_PATH . '/database.php';
     require_once MODEL_PATH . "/database_model.php";
-    
+
     // model parent
     require_once MODEL_PATH . "/base_model.php";
 
@@ -57,7 +57,7 @@ try {
     Logger::log('ERROR', $errorMessage);
     http_response_code(500);
     echo json_encode([
-        'status' => 'error',
+        "success" => false,
         'message' => 'Erreur fatale du serveur (require failed): ' . $e->getMessage()
     ]);
     exit();
@@ -77,6 +77,6 @@ try {
         $e->getLine()
     );
     Logger::log('ERROR', $errorMessage);
-    echo json_encode(['status' => 'error', 'message' => 'Erreur interne majeure du serveur.']);
+    echo json_encode(["success" => false, 'message' => 'Erreur interne majeure du serveur.']);
     exit();
 }

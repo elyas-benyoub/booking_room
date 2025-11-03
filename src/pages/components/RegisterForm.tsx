@@ -23,18 +23,19 @@ const RegisterForm = () => {
           password: password,
         }),
       });
-      
-      const result = await response.text();
+
+      const result = await response.json();
       console.log(result);
     } catch (error) {
       console.error(error);
     }
   };
   return (
-    <figure className="flex flex-col justify-center m-auto bg-emerald-500 p-3 rounded-xl p-16 gap-10 mt-10">
+    <figure className="flex flex-col justify-center m-auto bg-emerald-500 p-3 rounded-xl gap-10 mt-10">
       <h1 className="flex justify-center mb-3 text-4xl font-extrabold text-white underline">
         Inscription
       </h1>
+
       <form
         onSubmit={handlesubmit}
         className="flex flex-row justify-center gap-8">
