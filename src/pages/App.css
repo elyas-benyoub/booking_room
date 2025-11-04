@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* *, ::after, ::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+/* ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+} */
+
+html {
+  height: 100vh;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  position: relative;
+}
+
+.shadow-nav {
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+}
