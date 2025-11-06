@@ -7,7 +7,7 @@ export default function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   const title = "Five Legend";
 
-    useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
@@ -31,14 +31,14 @@ export default function Header() {
         {/* Bouton hamburger (mobile) */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2 rounded hover:bg-emerald-700 focus:outline-none"
+          className="md:hidden p-2 rounded hover:bg-emerald-700 focus:outline-none"
         >
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
 
         {/* Menu desktop */}
-        <nav className="hidden lg:flex gap-6 text-lg font-bold">
-          <NavLink to="/" className="hover:text-emerald-200 w-full">
+        <nav className="hidden md:flex gap-6 text-lg font-bold">
+          <NavLink to="/" className="hover:text-emerald-100 w-full">
             HOME
           </NavLink>
           <NavLink to="/register" className="hover:text-emerald-200 w-full">
@@ -52,31 +52,31 @@ export default function Header() {
 
       {/* Menu mobile */}
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-emerald-500 bg-emerald-600">
+        <div className="absolute to-100% w-full shadow-nav z-2 md:hidden border-t border-emerald-500 bg-emerald-600">
           <ul className="flex flex-col items-start text-lg font-bold">
-            <li className="px-4 py-3 w-full hover:bg-emerald-500">
+            <li className="px-4 w-full hover:bg-emerald-500">
               <NavLink
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
-                className="block hover:text-emerald-200"
+                className="block py-3 hover:text-emerald-100"
               >
                 Home
               </NavLink>
             </li>
-            <li className="px-4 py-3 w-full hover:bg-emerald-500">
+            <li className="px-4 w-full hover:bg-emerald-500">
               <NavLink
                 to="/register"
                 onClick={() => setIsMenuOpen(false)}
-                className="block hover:text-emerald-200"
+                className="block py-3 hover:text-emerald-100"
               >
                 S'inscrire
               </NavLink>
             </li>
-            <li className="px-4 py-3 w-full hover:bg-emerald-500">
+            <li className="px-4 w-full hover:bg-emerald-500">
               <NavLink
                 to="/profile"
                 onClick={() => setIsMenuOpen(false)}
-                className="block hover:text-emerald-200"
+                className="block py-3 hover:text-emerald-100"
               >
                 Profile
               </NavLink>

@@ -1,9 +1,16 @@
-import PicProfile from "/src/assets/profile.png";
+import PicProfile from "/src/assets/profile.webp";
 const ProfileFront = () => {
   return (
     <figure className="flex flex-row flex-1 justify-around m-16 bg-emerald-500 h-fit p-8 rounded-4xl">
         <figcaption className="flex flex-col size-56 rounded-4xl">
-          <img src={PicProfile} className="rounded-4xl" alt="" />
+          <img 
+            src={PicProfile}
+            className="rounded-4xl"
+            alt="" fetchPriority="high"
+            decoding="async"
+            width="1920"
+            height="1080"
+          />
           
         {/* </figcaption> */}
         {/* ____________________________________________ */}

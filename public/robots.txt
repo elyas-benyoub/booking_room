@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Empêche l'indexation de fichiers techniques
+Disallow: /node_modules/
+Disallow: /src/
+
+# URL du sitemap (facultatif mais recommandé)
+Sitemap: https://ton-domaine.com/sitemap.xml

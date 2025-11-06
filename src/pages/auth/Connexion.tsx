@@ -13,7 +13,7 @@ const Connexion = () => {
                     placeholder="Password"
                 />
             </div>
-            <div></div>
+            <button type="submit">Se connecter</button>
         </form>
     );
 };

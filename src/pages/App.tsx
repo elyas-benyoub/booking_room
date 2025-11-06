@@ -7,10 +7,18 @@ function App() {
   const textLeft = "Envie de jouer ? Lance ta propre session de foot ! Définis ton match, partage ton code et rassemble ton équipe en un rien de temps. Organiser un foot n’a jamais été aussi simple — tu choisis, tu invites, tu joues !"
   
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-row w-full justify-evenly">
-        <Card text ={textLeft}imgUrl={"src/assets/create.png"} btn={"Créer une session"} />
-        <Card text={textRight}imgUrl={"src/assets/join.png"} btn={"Rejoindre une session"} />
+    <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col md:flex-row justify-evenly w-fit md:w-full max-w-6xl gap-8">
+        <Card
+          text={textLeft}
+          imgUrl={"src/assets/create.webp"}
+          btn={"Créer une session"}
+        />
+        <Card
+          text={textRight}
+          imgUrl={"src/assets/join.webp"}
+          btn={"Rejoindre une session"}
+        />
       </div>
     </div>
   );
