@@ -152,7 +152,7 @@ const RegisterForm = () => {
                   rounded-xl border border-emerald-100 shadow-lg hover:bg-emerald-200
                   cursor-pointer transition-all"
       >
-        S'inscrire
+        S&apos;inscrire
       </button>
     </form>
   );

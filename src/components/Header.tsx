@@ -69,7 +69,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className="block py-3 hover:text-emerald-100"
               >
-                S'inscrire
+                S&apos;inscrire
               </NavLink>
             </li>
             <li className="px-4 w-full hover:bg-emerald-500">
